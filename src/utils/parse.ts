@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as csvParse from "csv-parse";
 import { join } from "path";
 import { isEmpty }  from "lodash";
-import { IRecipe } from 'src/types/';
+import { IRecipe } from '../types/';
 
 const DATA_DIR = "./data";
 const RECIPE_FILE = join(DATA_DIR, "full_format_recipes.json");

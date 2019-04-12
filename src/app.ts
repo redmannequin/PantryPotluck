@@ -1,4 +1,4 @@
-import { getAllRecipes } from 'src/utils/parse';
+import { getAllRecipes } from './utils/parse';
 
 async function test() {
     let allRecipes = await getAllRecipes();
