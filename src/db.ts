@@ -1,29 +1,12 @@
 import { v1 as neo4j } from "neo4j-driver";
 
+import {FullRecipe, Ingredient, Recipe} from './types'
 
 const uri = "bolt://localhost:7687"
 const user = "app"
 const password = "test"
 
 const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
-
-interface IIngredient {
-    name: string
-}
-
-interface IRecipe {
-    name: string,
-    directions: string
-}
-
-interface IRecipeIngredients {
-    ingredients: Ingredient[] 
-}
-
-export type Ingredient = IIngredient;
-export type Recipe = IRecipe;
-export type RecipeIngredients = IRecipeIngredients;
-export type FullRecipe = Recipe & RecipeIngredients;
 
 export const addIngredient = (tx: any, ingredient: Ingredient) => {
     return tx.run(
@@ -53,7 +36,8 @@ export const addIngredient2Recipe = (tx: any, ingredient: Ingredient, recipe: Re
 
 export const addIngredients = (ingredients: Ingredient[]) => {
     const session = driver.session();
-    let writeTxPromise = session.writeTransaction(tx => addIngredient(tx, ingredients.shift()));
+    if (ingredients.length == 0) return;
+    let writeTxPromise = session.writeTransaction(tx => addIngredient(tx, ingredients.shift()!));
     ingredients.forEach( ingredient => {
         writeTxPromise = writeTxPromise.then( () => session.writeTransaction(tx => addIngredient(tx, ingredient)))
     })
@@ -62,7 +46,8 @@ export const addIngredients = (ingredients: Ingredient[]) => {
 
 export const addRecipes = (recipes: Recipe[]) => {
     const session = driver.session();
-    let writeTxPromise = session.writeTransaction(tx => addRecipe(tx, recipes.shift()));
+    if (recipes.length == 0) return;
+    let writeTxPromise = session.writeTransaction(tx => addRecipe(tx, recipes.shift()!));
     recipes.forEach( recipe => {
         writeTxPromise = writeTxPromise.then( () => session.writeTransaction(tx => addRecipe(tx, recipe)))
     })
@@ -72,7 +57,7 @@ export const addRecipes = (recipes: Recipe[]) => {
 export const addRecipeRelationships = (recipe: FullRecipe) => {
     const session = driver.session();
     const ingredients = [...recipe.ingredients];
-    let writeTxPromise = session.writeTransaction(tx => addIngredient2Recipe(tx, ingredients.shift(), recipe));
+    let writeTxPromise = session.writeTransaction(tx => addIngredient2Recipe(tx, ingredients.shift()!, recipe));
     ingredients.forEach( ingredient => {
         writeTxPromise = writeTxPromise.then( () => session.writeTransaction(tx => addIngredient2Recipe(tx, ingredient, recipe)))
     })
