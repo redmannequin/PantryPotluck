@@ -37,8 +37,7 @@ export const addIngredient2Recipe = (tx: any, ingredient: Ingredient, recipe: Re
 export const addIngredients = (ingredients: Ingredient[]) => {
     const session = driver.session();
     if (ingredients.length == 0) return;
-    // tslint:disable-next-line
-    let writeTxPromise = session.writeTransaction(tx => addIngredient(tx, ingredients.shift()));
+    let writeTxPromise = session.writeTransaction(tx => addIngredient(tx, ingredients.shift()!));
     ingredients.forEach( ingredient => {
         writeTxPromise = writeTxPromise.then( () => session.writeTransaction(tx => addIngredient(tx, ingredient)))
     })
@@ -48,8 +47,7 @@ export const addIngredients = (ingredients: Ingredient[]) => {
 export const addRecipes = (recipes: Recipe[]) => {
     const session = driver.session();
     if (recipes.length == 0) return;
-    // tslint:disable-next-line
-    let writeTxPromise = session.writeTransaction(tx => addRecipe(tx, recipes.shift()));
+    let writeTxPromise = session.writeTransaction(tx => addRecipe(tx, recipes.shift()!));
     recipes.forEach( recipe => {
         writeTxPromise = writeTxPromise.then( () => session.writeTransaction(tx => addRecipe(tx, recipe)))
     })
@@ -59,8 +57,7 @@ export const addRecipes = (recipes: Recipe[]) => {
 export const addRecipeRelationships = (recipe: FullRecipe) => {
     const session = driver.session();
     const ingredients = [...recipe.ingredients];
-    // tslint:disable-next-line
-    let writeTxPromise = session.writeTransaction(tx => addIngredient2Recipe(tx, ingredients.shift(), recipe));
+    let writeTxPromise = session.writeTransaction(tx => addIngredient2Recipe(tx, ingredients.shift()!, recipe));
     ingredients.forEach( ingredient => {
         writeTxPromise = writeTxPromise.then( () => session.writeTransaction(tx => addIngredient2Recipe(tx, ingredient, recipe)))
     })
