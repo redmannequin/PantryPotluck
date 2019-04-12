@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "csv-parse": "^4.4.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "neo4j-driver": "^1.7.3"
   }
 }
