@@ -1,0 +1,28 @@
+{
+  "name": "pantry-potluck",
+  "version": "1.0.0",
+  "description": "Searchable Recipes From Ingredients",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redmannequin/PantryPotluck.git"
+  },
+  "author": "Flavio Barinas, Erik Burton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/redmannequin/PantryPotluck/issues"
+  },
+  "homepage": "https://github.com/redmannequin/PantryPotluck#readme",
+  "devDependencies": {
+    "@types/csv-parse": "^1.1.12",
+    "@types/lodash": "^4.14.123",
+    "@types/node": "^11.13.4",
+    "typescript": "^3.4.3"
+  },
+  "dependencies": {
+    "csv-parse": "^4.4.0",
+    "lodash": "^4.17.11"
+  }
+}
