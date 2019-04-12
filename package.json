@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Searchable Recipes From Ingredients",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js",
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "repository": {
     "type": "git",
