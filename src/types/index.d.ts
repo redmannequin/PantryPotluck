@@ -1,4 +1,4 @@
-import { IRecipe }  from './recipe';
+export * from './recipe';
 
 import { 
     Ingredient,
@@ -11,5 +11,3 @@ export { Ingredient };
 export { Recipe };
 export { RecipeIngredients };
 export { FullRecipe };
-
-export { IRecipe };

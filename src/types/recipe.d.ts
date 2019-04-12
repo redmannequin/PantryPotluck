@@ -3,7 +3,7 @@ export interface IRecipe {
     titleKey?: string;
     directions: string[];
     ingredientsDetailed: string[];
-    tags?: string[];
+    tags?: IRecipeTag[];
     categories: string[];
     calories: number;
     protein: number;
@@ -12,4 +12,7 @@ export interface IRecipe {
     rating: number;
     date: Date;
   }
-  
+
+export interface IRecipeTag {
+  name: string;
+}

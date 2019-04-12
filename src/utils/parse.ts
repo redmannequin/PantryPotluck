@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as csvParse from "csv-parse";
 import { join } from "path";
 import { isEmpty }  from "lodash";
-import { IRecipe } from '../types/';
+import { IRecipe, IRecipeTag } from '../types/';
 
 const DATA_DIR = "./data";
 const RECIPE_FILE = join(DATA_DIR, "full_format_recipes.json");
@@ -15,27 +15,23 @@ export async function getAllRecipes(): Promise<IRecipe[]> {
   let recipesArray = parseRecipes(RECIPE_FILE);
   let csvOutput = await parseCSVPromise(CSV_FILE);
 
-  let mistmatches = 0;
-
   for (let r = 0; r < recipesArray.length; r++) {
     let curRecipe = recipesArray[r];
     let curLine = csvOutput[curRecipe.titleKey || ''];
 
     if (curLine == null) {
       console.error(`Entry not found ${curRecipe.titleKey}`);
-      mistmatches++;
       continue;
     }
 
-    curRecipe.tags = Object.keys(curLine).reduce((acc: string[], key) => {
+    curRecipe.tags = Object.keys(curLine).reduce((acc: IRecipeTag[], key) => {
       if (curLine[key] !== "1.0") return acc;
 
-      return [...acc, key];
+      return [...acc, { name: key} ];
     }, []);
 
   }
-  console.log(mistmatches);
-  return recipesArray;
+  return recipesArray.filter(recipe => recipe.tags != null);
 }
 
 /**
