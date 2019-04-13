@@ -9,14 +9,14 @@ const DATABASE = Neo4jDB.getInstance(
   true
 )!;
 
-
-
 populateDatabase();
 
 async function populateDatabase() {
   let start = Date.now();
 
   let allRecipes = await getAllRecipes();
+
+  console.log(`Unique Recipes: ${allRecipes.length}`);
 
   for (let r = 0; r < allRecipes.length; r++) {
     await DATABASE.addRecipeAndIngredients(allRecipes[r]);
@@ -25,7 +25,7 @@ async function populateDatabase() {
   }
 
   let end = Date.now();
-  console.log(end - start);
+  console.log(`Time taken: ${end - start}`);
 
-  process.exit(1);
+  process.exit(0);
 }
