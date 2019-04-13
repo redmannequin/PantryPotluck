@@ -1,8 +1,8 @@
 export interface IRecipe {
     title: string;
-    titleKey?: string;
+    key?: string;
     directions: string[];
-    ingredientsDetailed: string[];
+    ingredients: string[];
     tags?: IRecipeTag[];
     categories: string[];
     calories: number;

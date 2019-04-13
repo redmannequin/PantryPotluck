@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as csvParse from "csv-parse";
 import { join } from "path";
-import { isEmpty }  from "lodash";
+import { isEmpty, uniqBy }  from "lodash";
 import { IRecipe, IRecipeTag } from '../types/';
 
 const DATA_DIR = "./data";
@@ -17,10 +17,10 @@ export async function getAllRecipes(): Promise<IRecipe[]> {
 
   for (let r = 0; r < recipesArray.length; r++) {
     let curRecipe = recipesArray[r];
-    let curLine = csvOutput[curRecipe.titleKey || ''];
+    let curLine = csvOutput[curRecipe.key!];
 
     if (curLine == null) {
-      console.error(`Entry not found ${curRecipe.titleKey}`);
+      console.error(`Entry not found ${curRecipe.key}`);
       continue;
     }
 
@@ -31,7 +31,9 @@ export async function getAllRecipes(): Promise<IRecipe[]> {
     }, []);
 
   }
-  return recipesArray.filter(recipe => recipe.tags != null);
+  
+  recipesArray = recipesArray.filter(recipe => recipe.tags != null)
+  return uniqBy(recipesArray, 'key');
 }
 
 /**
@@ -50,7 +52,7 @@ function parseRecipes(filename: string): IRecipe[] {
   })
 
   recipesArray.forEach(recipe => {
-    recipe.titleKey = recipe.title.replace(/\W/g, '').toLowerCase().trim();
+    recipe.key = recipe.title.replace(/\W/g, '').toLowerCase().trim();
   });
 
   return recipesArray;

@@ -1,44 +1,31 @@
-import { getAllRecipes } from './utils/parse';
+import { NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD } from "./utils/env";
+import { getAllRecipes } from "./utils/parse";
+import { Neo4jDB } from "./db";
 
-import {Recipe, Ingredient, FullRecipe} from './types';
-import {addRecipes, addIngredients, addRecipeRelationships} from './db';
+const DATABASE = Neo4jDB.getInstance(
+  NEO4J_URI,
+  NEO4J_USERNAME,
+  NEO4J_PASSWORD,
+  true
+)!;
 
 
-async function test() {
-    let allRecipes = await getAllRecipes();
-    console.log(allRecipes.length);
+
+populateDatabase();
+
+async function populateDatabase() {
+  let start = Date.now();
+
+  let allRecipes = await getAllRecipes();
+
+  for (let r = 0; r < allRecipes.length; r++) {
+    await DATABASE.addRecipeAndIngredients(allRecipes[r]);
+
+    if (r % 100 === 0) console.log(r);
+  }
+
+  let end = Date.now();
+  console.log(end - start);
+
+  process.exit(1);
 }
-
-test();
-
-
-const recipes: Recipe[] = [];
-for(let i=0; i< 6; ++i) {
-    recipes.push({
-        name: 'r'+i,
-        directions: ''
-    })
-}
-
-
-const ingredients: Ingredient[] = [];
-for(let i=0; i< 10; ++i) {
-    ingredients.push({
-        name: 'i'+i,
-    })
-}
-
-const fullRecipes: FullRecipe[] = recipes.map( elm => {
-    const ins = []
-    for(let i=0; i< 3; ++i) {
-        ins.push(ingredients[Math.floor(Math.random() * ingredients.length)])
-    }
-    return {
-        ...elm,
-        ingredients: ins
-    }
-});
-
-addRecipes(recipes);
-addIngredients(ingredients)
-fullRecipes.forEach(recipe => addRecipeRelationships(recipe))
