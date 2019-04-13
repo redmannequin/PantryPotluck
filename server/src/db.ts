@@ -178,6 +178,7 @@ export class Neo4jDB {
         MATCH (r:Recipe)
         WHERE ALL (i in ingredients WHERE (i)-[:IN]->(r))
         RETURN r
+        LIMIT 50
         `
       );
 
