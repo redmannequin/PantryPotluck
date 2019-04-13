@@ -89,7 +89,7 @@ class App extends Component<any, State> {
 
 					<br/>
 
-					<div className='rrs row'>
+					<div className='row'>
 						{
 							recipes.map( (recipe: IRecipe, idx:number) => <RecipeCard data={recipe} key={idx}/>)
 						}
@@ -149,7 +149,7 @@ const RecipeCard:StatelessComponent<any> = (props: any) => {
 	} = props.data;
 
 	return(
-		<div className="col-6" style={{paddingBottom:'10px'}}>
+		<div className="col-12" style={{paddingBottom:'10px'}}>
 			<div className="card">
 				
 				<h5 className="card-header">{title}({[rating]})</h5>
@@ -160,10 +160,12 @@ const RecipeCard:StatelessComponent<any> = (props: any) => {
 
 						<div className="col-4">
 							<p className="card-text">
-								Ingredients: <br/> &nbsp;&nbsp;&nbsp;&nbsp;
-								{
-									ingredients.join(', ')
-								}
+								Ingredients: <br/>
+								<ul>
+									{
+										ingredients.map( (elm:string, idx:number) => <li key={idx}>{elm}</li>)
+									}
+								</ul>
 							</p>
 						</div>
 					
