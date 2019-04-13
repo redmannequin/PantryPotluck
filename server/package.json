@@ -37,5 +37,6 @@
     "express": "^4.16.4",
     "lodash": "^4.17.11",
     "neo4j-driver": "^1.7.3"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
