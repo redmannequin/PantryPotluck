@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "description": "Searchable Recipes From Ingredients",
   "scripts": {
-    
     "client-install": "npm install --prefix client",
     "server": "nodemon dist/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-
     "start": "node dist/app.js",
     "build": "tsc",
     "watch": "tsc -w"
@@ -28,9 +26,11 @@
     "@types/dotenv": "^6.1.1",
     "@types/lodash": "^4.14.123",
     "@types/node": "^11.13.4",
+    "nodemon": "^1.18.11",
     "typescript": "^3.4.3"
   },
   "dependencies": {
+    "concurrently": "^4.1.0",
     "csv-parse": "^4.4.0",
     "dotenv": "^7.0.0",
     "lodash": "^4.17.11",
