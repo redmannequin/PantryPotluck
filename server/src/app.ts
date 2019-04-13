@@ -53,13 +53,8 @@ app.get("/populate", async (_, res: Response) => {
 });
 
 app.get("/tags", getTags);
-app.get("/recipes", getRecipesByTags);
+app.get("/recipe", getRecipesByTags);
 app.get("/recipe/:key", getRecipe);
-
-app.get("*", (req: Request, res:Response) => {
-  res.send(req);
-});
-
 
 app.listen(port, () => {
   console.log(`
