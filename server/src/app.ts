@@ -20,7 +20,7 @@ async function populateDatabase() {
   console.log(`Populating Database`);
   console.log(`Unique Recipes: ${allRecipes.length}`);
 
-  for (let r = 0; r < 100 /*allRecipes.length*/; r++) {
+  for (let r = 0; r < allRecipes.length; r++) {
     await DATABASE.addRecipeAndIngredients(allRecipes[r]);
 
     if (r % 100 === 0) console.log(r);
