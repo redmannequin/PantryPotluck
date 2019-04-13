@@ -41,60 +41,12 @@ class App extends Component<any, State> {
 		this.state = {
 			tags: [],
 			suggestions: [],
-			recipes: [
-				{
-					title: 'Test',
-					key: 'Test',
-					directions: ['Test','Test'],
-					ingredients: ['Test', 'Test'],
-					tags: [
-						{ name: 'Test'}, 
-						{ name: 'Test'}
-					],
-					categories: ['Test', 'Test'],
-					calories: 100,
-					protein: 100,
-					fat: 100,
-					sodium: 100,
-					rating: 100,
-					date: new Date(),
-				},{
-					title: 'Test',
-					key: 'Test',
-					directions: ['Test','Test'],
-					ingredients: ['Test', 'Test'],
-					tags: [
-						{ name: 'Test'}, 
-						{ name: 'Test'}
-					],
-					categories: ['Test', 'Test'],
-					calories: 100,
-					protein: 100,
-					fat: 100,
-					sodium: 100,
-					rating: 100,
-					date: new Date(),
-				},{
-					title: 'Test',
-					key: 'Test',
-					directions: ['Test','Test'],
-					ingredients: ['Test', 'Test'],
-					tags: [
-						{ name: 'Test'}, 
-						{ name: 'Test'}
-					],
-					categories: ['Test', 'Test'],
-					calories: 100,
-					protein: 100,
-					fat: 100,
-					sodium: 100,
-					rating: 100,
-					date: new Date(),
-				}
-			]
+			recipes: []
 		}
+
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleAddition = this.handleAddition.bind(this);
+		this.updateRecipes = this.updateRecipes.bind(this);
 	}
 
 	componentDidMount() {
@@ -109,8 +61,6 @@ class App extends Component<any, State> {
 			})
 			.catch()
 	}
-		
-
 
 	render() {
 		const {tags, suggestions, recipes} = this.state;
@@ -139,7 +89,7 @@ class App extends Component<any, State> {
 
 					<br/>
 
-					<div className='row'>
+					<div className='rrs row'>
 						{
 							recipes.map( (recipe: IRecipe, idx:number) => <RecipeCard data={recipe} key={idx}/>)
 						}
@@ -155,18 +105,39 @@ class App extends Component<any, State> {
 		);
 	}
 
+	private updateRecipes(state: State) {
+		const tags = state.tags;
+		if (tags.length == 0 ) {
+			this.setState(state);
+			return;
+		}
+		const url = 'http://localhost:5000/recipe?' + tags.map( elm => `tag=${elm.name}`).join('&')
+		console.log(url)
+		axios
+			.get(url)
+			.then( res => {
+				console.log(res.data)
+				state.recipes = res.data;
+				this.setState(state)
+			})
+			.catch()
+	}
+
 	private handleDelete(i:number) {
-		const state = { ...this.state };
+		const state: State = { ...this.state };
 		const tags = state.tags.slice(0);
 		tags.splice(i, 1);
-		this.setState({ tags });
+		state.tags = tags;
+		this.updateRecipes(state);
 	}
 
 	private handleAddition(tag: { id: string | number; name: string }) {
-		const state = { ...this.state };
+		const state: State = { ...this.state };
 		const tags = state.tags.concat(tag);
-    	this.setState({ tags });
+		state.tags = tags;
+		this.updateRecipes(state)
 	}
+
 }
 
 const RecipeCard:StatelessComponent<any> = (props: any) => {
