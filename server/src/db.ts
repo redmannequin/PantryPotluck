@@ -44,13 +44,23 @@ export class Neo4jDB {
     await this.constraints();
   }
 
-  private async constraints() {
+  async constraints() {
     const session = this.driver.session();
 
     await session.writeTransaction(async (tx: neo4j.Transaction) => {
       await tx.run(`CREATE INDEX ON :Recipe(key)`);
       await tx.run(`CREATE INDEX ON :Ingredient(name)`);
       // await tx.run(`CREATE CONSTRAINT ON (r:Recipe) ASSERT r.key IS UNIQUE`);
+    });
+
+    session.close();
+  }
+
+  async drop() {
+    const session = this.driver.session();
+
+    await session.writeTransaction(async (tx: neo4j.Transaction) => {
+      tx.run(`MATCH(n) DETACH DELETE n`);
     });
 
     session.close();
@@ -81,7 +91,8 @@ export class Neo4jDB {
             key:{key},
             title:{title},
             directions:{directions},
-            ingredients:{ingredients}
+            ingredients:{ingredients},
+            categories:{categories}
             })
         `,
       recipe
@@ -94,13 +105,37 @@ export class Neo4jDB {
     });
   }
 
-  private async drop() {
+  async getTags() {
     const session = this.driver.session();
 
+    let tags: neo4j.Record[] = [];
+
     await session.writeTransaction(async (tx: neo4j.Transaction) => {
-      tx.run(`MATCH(n) DETACH DELETE n`);
+      let response = await tx.run(`MATCH (i:Ingredient) return i.name`);
+
+      tags = response.records;
     });
 
-    session.close();
+    await session.close();
+
+    return tags;
+  }
+
+  async getRecipe(key: string) {
+    const session = this.driver.session();
+
+    let recipe: neo4j.Record[] = [];
+
+    await session.writeTransaction(async (tx: neo4j.Transaction) => {
+      let response = await tx.run(`MATCH (r:Recipe {key:{key}}) return r`, {
+        key
+      });
+
+      recipe = response.records;
+    });
+
+    await session.close();
+
+    return recipe;
   }
 }

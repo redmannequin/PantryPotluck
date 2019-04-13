@@ -1,1 +1,2 @@
-//For all our controllers
+export * from './tags'
+export * from './recipe'
