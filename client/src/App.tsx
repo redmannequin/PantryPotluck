@@ -80,12 +80,14 @@ class App extends Component<any, State> {
 
 				<div className="container">
 
-					<ReactTags
-						tags={tags}
-						suggestions={suggestions}
-						handleDelete={this.handleDelete}
-						handleAddition={this.handleAddition} 
-					/>
+					<div>
+						<ReactTags
+							tags={tags}
+							suggestions={suggestions}
+							handleDelete={this.handleDelete}
+							handleAddition={this.handleAddition} 
+						/>
+					</div>
 
 					<br/>
 
@@ -108,6 +110,7 @@ class App extends Component<any, State> {
 	private updateRecipes(state: State) {
 		const tags = state.tags;
 		if (tags.length == 0 ) {
+			state.recipes = [];
 			this.setState(state);
 			return;
 		}
