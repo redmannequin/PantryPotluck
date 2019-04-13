@@ -138,4 +138,54 @@ export class Neo4jDB {
 
     return recipe;
   }
+
+  async getTagsFromRecipe(key: string) {
+    const session = this.driver.session();
+
+    let tags: neo4j.Record[] = [];
+
+    await session.writeTransaction(async (tx: neo4j.Transaction) => {
+      let response = await tx.run(
+        `
+          MATCH (r:Recipe {key:{key}})
+          MATCH (i:Ingredient)-[:IN]->(r) return i
+        `,
+        {
+          key
+        }
+      );
+
+      tags = response.records;
+    });
+
+    await session.close();
+
+    return tags;
+  }
+
+  async getRecipesFromTags(tags: IRecipeTag[]) {
+    const session = this.driver.session();
+
+    let recipes: neo4j.Record[] = [];
+
+    await session.writeTransaction(async (tx: neo4j.Transaction) => {
+        let response = await tx.run(
+        `
+        WITH ${JSON.stringify(tags)} as tags
+        MATCH (i:Ingredient)
+        WHERE i.name in tags
+        WITH collect(i) as ingredients
+        MATCH (r:Recipe)
+        WHERE ALL (i in ingredients WHERE (i)-[:IN]->(r))
+        RETURN r
+        `
+      );
+
+      recipes = response.records;
+    });
+
+    await session.close();
+
+    return recipes;
+  }
 }

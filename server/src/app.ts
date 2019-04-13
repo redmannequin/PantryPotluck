@@ -3,7 +3,7 @@ import { getAllRecipes } from "./utils/parse";
 import { Neo4jDB } from "./db";
 import express from "express";
 import { Request, Response } from "express";
-import { getRecipe, getTags } from "./controllers";
+import { getRecipe, getRecipesByTags, getTags } from "./controllers";
 
 const DATABASE = Neo4jDB.getInstance(
   NEO4J_URI,
@@ -53,7 +53,13 @@ app.get("/populate", async (_, res: Response) => {
 });
 
 app.get("/tags", getTags);
+app.get("/recipes", getRecipesByTags);
 app.get("/recipe/:key", getRecipe);
+
+app.get("*", (req: Request, res:Response) => {
+  res.send(req);
+});
+
 
 app.listen(port, () => {
   console.log(`
